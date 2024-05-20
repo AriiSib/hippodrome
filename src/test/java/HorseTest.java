@@ -6,6 +6,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -43,7 +44,7 @@ class HorseTest {
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "   "})
     void shouldContainsExpectedExceptionMessageWhenProvidedWhitespace(String whitespace) {
-       IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Horse(whitespace, 0.2);
         });
 
@@ -101,7 +102,7 @@ class HorseTest {
         assertEquals(validDistance, new Horse("validName", 0.2, validDistance).getDistance());
     }
 
-   @Test
+    @Test
     void shouldReturnDefaultValueOfDistance() {
         assertEquals(0.0, new Horse("validName", 0.2).getDistance());
     }
@@ -112,7 +113,7 @@ class HorseTest {
 
             Horse horseTest = new Horse("ValidName", 0.1);
             horseTest.move();
-           horseMockedStatic.verify( ()-> Horse.getRandomDouble(0.2, 0.9));
+            horseMockedStatic.verify(() -> Horse.getRandomDouble(0.2, 0.9));
         }
     }
 
@@ -120,7 +121,7 @@ class HorseTest {
     @CsvSource({"0.0, 1.2, 0.2, 0.9"})
     void shouldUpdateDistanceAccordingToFormula(double distance, double speed, double min, double max) {
         try (MockedStatic<Horse> horseMockedStatic = Mockito.mockStatic(Horse.class)) {
-            horseMockedStatic.when(()-> Horse.getRandomDouble(min, max)).thenReturn(0.69);
+            horseMockedStatic.when(() -> Horse.getRandomDouble(min, max)).thenReturn(0.69);
 
             Horse horseTest = new Horse("ValidName", speed, distance);
             horseTest.move();
