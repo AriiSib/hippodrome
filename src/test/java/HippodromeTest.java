@@ -4,7 +4,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,14 +15,14 @@ class HippodromeTest {
     private static final String EXPECTED_EMPTY_NAME_MESSAGE = "Horses cannot be empty.";
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenProvidedNull() {
+    void should_ThrowIllegalArgumentException_When_HorsesIsNull() {
         assertThrows(IllegalArgumentException.class, () -> {
             new Hippodrome(null);
         });
     }
 
     @Test
-    void shouldContainsExpectedMessageExceptionWhenProvidedNull() {
+    void should_ContainExpectedMessage_When_HorsesIsNull() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Hippodrome(null);
         });
@@ -32,14 +31,14 @@ class HippodromeTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenProvidedEmptyList() {
+    void should_ThrowIllegalArgumentException_When_HorsesListIsEmpty() {
         assertThrows(IllegalArgumentException.class, () -> {
             new Hippodrome(new ArrayList<>());
         });
     }
 
     @Test
-    void shouldContainsExpectedMessageExceptionWhenProvidedEmptyList() {
+    void should_ContainExpectedMessage_When_HorsesListIsEmpty() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Hippodrome(new ArrayList<>());
         });
@@ -48,7 +47,7 @@ class HippodromeTest {
     }
 
     @Test
-    void shouldReturnHorsesListSameAsPassedToConstructor() {
+    void should_ReturnSameHorsesList_When_CalledGetHorses() {
         List<Horse> horseList = new ArrayList<>();
         for (int i = 1; i <= 30; i++) {
             horseList.add(new Horse("Horse_" + i, 0.1));
@@ -59,15 +58,13 @@ class HippodromeTest {
     }
 
     @Test
-    void shouldCallMoveOnAllHorses() {
+    void should_CallMoveOnAllHorses_When_MoveIsCalled() {
         List<Horse> horseList = new ArrayList<>();
         for (int i = 1; i <= 50; i++) {
-            Horse mockHorse = Mockito.mock(Horse.class);
-            horseList.add(mockHorse);
+            horseList.add(Mockito.mock(Horse.class));
         }
 
-        Hippodrome hippodrome = new Hippodrome(horseList);
-        hippodrome.move();
+        new Hippodrome(horseList).move();
 
         for (Horse horse : horseList) {
             Mockito.verify(horse).move();
@@ -75,18 +72,12 @@ class HippodromeTest {
     }
 
     @Test
-    void shouldReturnHorseWithMaxDistanceWhenGetWinnerIsCalled() {
-        List<Horse> horseList = new ArrayList<>();
-        horseList.add(new Horse("ValidName1", 0.1, 0.1));
-        horseList.add(new Horse("ValidName2", 0.2, 0.4));
-        horseList.add(new Horse("ValidName3", 0.3, 0.2));
+    void should_ReturnHorseWithMaxDistance_When_GetWinnerIsCalled() {
+        Horse horse1 = new Horse("ValidName1", 0.1, 0.1);
+        Horse horse2 = new Horse("ValidName2", 0.2, 0.4);
+        Horse horse3 = new Horse("ValidName3", 0.3, 0.2);
+        Hippodrome hippodrome = new Hippodrome(List.of(horse1, horse2, horse3));
 
-        Hippodrome hippodrome = new Hippodrome(horseList);
-
-        Horse expectedWinner = horseList.stream()
-                                        .max(Comparator.comparing(Horse::getDistance))
-                                        .orElseThrow();
-
-        assertEquals(expectedWinner, hippodrome.getWinner());
+        assertSame(horse2, hippodrome.getWinner());
     }
 }

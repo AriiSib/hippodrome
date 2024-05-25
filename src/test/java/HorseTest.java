@@ -18,14 +18,14 @@ class HorseTest {
     private static final String EXPECTED_NEGATIVE_DISTANCE_MESSAGE = "Distance cannot be negative.";
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenProvidedNull() {
+    void should_ThrowIllegalArgumentException_When_NameIsNull() {
         assertThrows(IllegalArgumentException.class, () -> {
             new Horse(null, 0.1);
         });
     }
 
     @Test
-    void shouldContainsExpectedExceptionMessageWhenProvidedNull() {
+    void should_ContainExpectedMessage_When_NameIsNull() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Horse(null, 0.1);
         });
@@ -35,15 +35,15 @@ class HorseTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "   "})
-    void shouldThrowIllegalArgumentExceptionWhenProvidedWhitespace(String whitespace) {
+    void should_ThrowIllegalArgumentException_When_NameIsBlank(String blankName) {
         assertThrows(IllegalArgumentException.class, () -> {
-            new Horse(whitespace, 0.2);
+            new Horse(blankName, 0.2);
         });
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"", " ", "   "})
-    void shouldContainsExpectedExceptionMessageWhenProvidedWhitespace(String whitespace) {
+    void should_ContainExpectedMessage_When_NameIsBlank(String whitespace) {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Horse(whitespace, 0.2);
         });
@@ -52,14 +52,14 @@ class HorseTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenProvidedNegativeNumber() {
+    void should_ThrowIllegalArgumentException_When_SpeedIsNegative() {
         assertThrows(IllegalArgumentException.class, () -> {
             new Horse("ValidName", -0.1);
         });
     }
 
     @Test
-    void shouldContainsExpectedExceptionMessageWhenSecondParameterNegativeNumber() {
+    void should_ContainExpectedMessage_When_SpeedIsNegative() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Horse("ValidName", -0.1);
         });
@@ -68,14 +68,14 @@ class HorseTest {
     }
 
     @Test
-    void shouldThrowIllegalArgumentExceptionWhenThirdParameterNegativeNumber() {
+    void should_ThrowIllegalArgumentException_When_DistanceIsNegative() {
         assertThrows(IllegalArgumentException.class, () -> {
             new Horse("ValidName", 0.1, -0.1);
         });
     }
 
     @Test
-    void shouldContainsExpectedExceptionMessageWhenThirdParameterNegativeNumber() {
+    void should_ContainExpectedMessage_When_DistanceIsNegative() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             new Horse("ValidName", 0.1, -0.1);
         });
@@ -85,47 +85,47 @@ class HorseTest {
 
 
     @ParameterizedTest
-    @ValueSource(strings = {"validName", "s", " validName "})
-    void shouldReturnFirstParameterOfConstructor(String validName) {
+    @ValueSource(strings = {"validName", "s", "     validName "})
+    void should_ReturnName_When_GetNameIsCalled(String validName) {
         assertEquals(validName, new Horse(validName, 0.1).getName());
     }
 
     @ParameterizedTest
     @ValueSource(doubles = {0.1, 0, 0d})
-    void shouldReturnSecondParameterOfConstructor(double validSpeed) {
-        assertEquals(validSpeed, new Horse("validName", validSpeed, 0.2).getSpeed());
+    void should_ReturnSpeed_When_GetSpeedIsCalled(double expectedSpeed) {
+        assertEquals(expectedSpeed, new Horse("validName", expectedSpeed, 0.2).getSpeed());
     }
 
     @ParameterizedTest
     @ValueSource(doubles = {0.1, 0, 0d})
-    void shouldReturnThirdParameterOfConstructor(double validDistance) {
-        assertEquals(validDistance, new Horse("validName", 0.2, validDistance).getDistance());
+    void should_ReturnDistance_When_GetDistanceIsCalled(double expectedSpeed) {
+        assertEquals(expectedSpeed, new Horse("validName", 0.2, expectedSpeed).getDistance());
     }
 
     @Test
-    void shouldReturnDefaultValueOfDistance() {
+    void should_ReturnDefaultDistance_When_DistanceIsNotProvided() {
         assertEquals(0.0, new Horse("validName", 0.2).getDistance());
     }
 
     @Test
-    void shouldCallGetRandomMethodWithValues() {
+    void should_CallGetRandomDoubleWithSpecificValues_When_MoveIsCalled() {
         try (MockedStatic<Horse> horseMockedStatic = Mockito.mockStatic(Horse.class)) {
+            new Horse("ValidName", 0.1).move();
 
-            Horse horseTest = new Horse("ValidName", 0.1);
-            horseTest.move();
             horseMockedStatic.verify(() -> Horse.getRandomDouble(0.2, 0.9));
         }
     }
 
     @ParameterizedTest
-    @CsvSource({"0.0, 1.2, 0.2, 0.9"})
-    void shouldUpdateDistanceAccordingToFormula(double distance, double speed, double min, double max) {
+    @CsvSource({"0.0, 1.2, 0.2, 0.9, 0.828"})
+    void should_UpdateDistanceAccordingToFormula_When_MoveIsCalled(double distance, double speed, double min, double max, double result) {
         try (MockedStatic<Horse> horseMockedStatic = Mockito.mockStatic(Horse.class)) {
+            Horse horseTest = new Horse("ValidName", speed, distance);
             horseMockedStatic.when(() -> Horse.getRandomDouble(min, max)).thenReturn(0.69);
 
-            Horse horseTest = new Horse("ValidName", speed, distance);
             horseTest.move();
-            assertEquals(0.828, horseTest.getDistance());
+
+            assertEquals(result, horseTest.getDistance());
         }
     }
 }

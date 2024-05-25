@@ -4,14 +4,12 @@ import org.junit.jupiter.api.Timeout;
 
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class MainTest {
 
     @Test
     @Timeout(value = 22, unit = TimeUnit.SECONDS)
     @Disabled
-    void main() throws Exception {
+    void mainTimeout() throws Exception {
         Main.main(new String[]{});
     }
 }
